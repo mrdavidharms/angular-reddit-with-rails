@@ -1,19 +1,84 @@
 <html>
   <head>
     <title>My Angular App!</title>
+    <script id="__bs_script__">//<![CDATA[
+    document.write("<script async src='http://HOST:3000/browser-sync/browser-sync-client.2.15.0.js'><\/script>".replace("HOST", location.hostname));
+    </script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
     <script src="app.js"></script>
   </head>
-  <body ng-app="flapperNews" ng-controller="MainCtrl">
-    <div ng-repeat="post in posts | orderBy: '-upvotes'">
-      <span ng-click="addVote(post)">^</span>
-      <span ng-click="downVote(post)">DOWN</span>
-      {{post.title}} - upvotes: {{post.upvotes}}
+  <body ng-app="flapperNews">
+    <div>
+      <ui-view></ui-view>
     </div>
 
+    <!-- home template begins -->
+    <script type="text/ng-template" id="/home.html">
+      <div class="page-header">
+        <h1>Flapper News</h1>
+      </div>
+      <div ng-repeat="post in posts | orderBy: '-upvotes'">
+        <span ng-click="addVote(post)">^</span>
+        <span ng-click="downVote(post)">DOWN</span>
+        <a ng-show="post.link" href="{{post.link}}">
+          {{post.title}}
+        </a>
+        <span ng-hide="post.link">
+          {{post.title}}
+        </span>
+        <span>
+          <a href="#/posts/{{$index}}">Comments</a>
+        </span>
+          - upvotes: {{post.upvotes}}
+      </div>
+      <form ng-submit="addPost()">
+        <input type="text" placeholder="Title" ng-model="title"></input>
+          <br>
+        <input type="text" placeholder="Link" ng-model="link"></input>
+          <br>
+      <button type="submit">Post</button>
+    </script>
+    <!-- home template ends -->
+    <!-- posts template begins -->
+    <script type="text/ng-template" id="/posts.html">
+      <div class="page-header">
+        <h3>
+        <a ng-show="post.link" href="{{post.link}}">
+          {{post.title}}
+        </a>
+        <span ng-hide="post.link">
+          {{post.title}}
+        </span>
 
-    <form ng-submit="addPost()">
-      <input type="text" ng-model="title"></input>
-    <button type="submit">Post</button>
+      </h3>
+    </div>
+
+    <div ng-repeat="comment in post.comments | orderBy: '-upvotes' ">
+      <span ng-click="addVote(comment)">^</span>
+      <span ng-click="downVote(comment)">DOWN</span>
+        {{comment.upvotes}} - by {{comment.author}}
+      <span >
+        {{comment.body}}
+      </span>
+    </div>
+    <form ng-submit='addComment()'>
+      <h3>Add a new Comment</h3>
+      <div>
+        <input type="text"
+         class="form-control"
+         placeholder="Comment"
+         ng-model="body"></input>
+       </div>
+       <button type="submit" class="btn btn-primary">Post</button>
+    </form>
+  </script>
+<!-- posts template ends -->
+
+
+
   </body>
+
+
+
 </html>
