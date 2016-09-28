@@ -13,10 +13,10 @@ angular.module('flapperNews')
       $scope.link = '';
     };
     $scope.addVote = function(post) {
-      post.upvotes += 1;
+      posts.upvote(post);
     };
     $scope.downVote = function(post) {
-      post.upvotes -= 1;
+      posts.upvote(post);
     };
     $scope.posts = posts.posts;
   }]);
